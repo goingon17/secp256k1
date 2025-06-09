@@ -1,0 +1,131 @@
+Benchmark                     ,    Min(us)    ,    Avg(us)    ,    Max(us)    
+
+ecmult_gen                    ,     5.47      ,     5.52      ,     5.57   
+Time for average secp256k1_scalar_split_lambda:     0.0    us
+ecmult_const                  ,    12.5       ,    12.6       ,    12.8    
+Time for average secp256k1_scalar_split_lambda:     0.0    us
+ecmult_1p                     ,    10.0       ,    10.2       ,    10.4    
+Time for average secp256k1_scalar_split_lambda:     0.0908 us
+ecmult_0p_g                   ,     6.91      ,     7.03      ,     7.12   
+Time for average secp256k1_scalar_split_lambda:     0.0    us
+ecmult_1p_g                   ,     5.88      ,     5.96      ,     6.02   
+Time for average secp256k1_scalar_split_lambda:     0.0475 us
+ecmult_multi_0p_g             ,     6.97      ,     7.04      ,     7.08   
+Time for average secp256k1_scalar_split_lambda:     0.0    us
+ecmult_multi_1p_g             ,     5.85      ,     5.97      ,     6.03   
+Time for average secp256k1_scalar_split_lambda:     0.0457 us
+ecmult_multi_2p_g             ,     5.54      ,     5.63      ,     5.68   
+Time for average secp256k1_scalar_split_lambda:     0.0615 us
+ecmult_multi_3p_g             ,     5.38      ,     5.47      ,     5.54   
+Time for average secp256k1_scalar_split_lambda:     0.0713 us
+ecmult_multi_4p_g             ,     5.34      ,     5.38      ,     5.41   
+Time for average secp256k1_scalar_split_lambda:     0.0743 us
+ecmult_multi_5p_g             ,     5.24      ,     5.31      ,     5.44   
+Time for average secp256k1_scalar_split_lambda:     0.0773 us
+ecmult_multi_6p_g             ,     5.22      ,     5.30      ,     5.37   
+Time for average secp256k1_scalar_split_lambda:     0.0815 us
+ecmult_multi_7p_g             ,     5.15      ,     5.24      ,     5.38   
+Time for average secp256k1_scalar_split_lambda:     0.0805 us
+no
+ecmult_multi_8p_g             ,     5.15      ,     5.19      ,     5.23   
+Time for average secp256k1_scalar_split_lambda:     0.0814 us
+ecmult_multi_9p_g             ,     5.11      ,     5.18      ,     5.25   
+Time for average secp256k1_scalar_split_lambda:     0.0861 us
+ecmult_multi_10p_g            ,     5.08      ,     5.18      ,     5.27   
+Time for average secp256k1_scalar_split_lambda:     0.0837 us
+ecmult_multi_11p_g            ,     5.08      ,     5.15      ,     5.25   
+Time for average secp256k1_scalar_split_lambda:     0.0836 us
+ecmult_multi_12p_g            ,     5.04      ,     5.14      ,     5.22   
+Time for average secp256k1_scalar_split_lambda:     0.0861 us
+ecmult_multi_13p_g            ,     5.03      ,     5.10      ,     5.20   
+Time for average secp256k1_scalar_split_lambda:     0.0853 us
+ecmult_multi_14p_g            ,     5.03      ,     5.10      ,     5.18   
+Time for average secp256k1_scalar_split_lambda:     0.0868 us
+ecmult_multi_15p_g            ,     5.00      ,     5.09      ,     5.16   
+Time for average secp256k1_scalar_split_lambda:     0.0881 us
+ecmult_multi_17p_g            ,     5.00      ,     5.08      ,     5.17   
+Time for average secp256k1_scalar_split_lambda:     0.0881 us
+ecmult_multi_19p_g            ,     4.98      ,     5.05      ,     5.13   
+Time for average secp256k1_scalar_split_lambda:     0.0851 us
+ecmult_multi_21p_g            ,     5.00      ,     5.08      ,     5.19   
+Time for average secp256k1_scalar_split_lambda:     0.0873 us
+ecmult_multi_23p_g            ,     4.94      ,     5.06      ,     5.12   
+Time for average secp256k1_scalar_split_lambda:     0.0893 us
+ecmult_multi_25p_g            ,     4.96      ,     5.03      ,     5.09   
+Time for average secp256k1_scalar_split_lambda:     0.0889 us
+ecmult_multi_27p_g            ,     4.96      ,     5.03      ,     5.12   
+Time for average secp256k1_scalar_split_lambda:     0.0881 us
+ecmult_multi_29p_g            ,     4.95      ,     5.03      ,     5.11   
+Time for average secp256k1_scalar_split_lambda:     0.0891 us
+ecmult_multi_31p_g            ,     4.93      ,     5.02      ,     5.07   
+Time for average secp256k1_scalar_split_lambda:     0.0887 us
+ecmult_multi_35p_g            ,     4.95      ,     5.03      ,     5.10   
+Time for average secp256k1_scalar_split_lambda:     0.0893 us
+ecmult_multi_39p_g            ,     4.93      ,     4.98      ,     5.06   
+Time for average secp256k1_scalar_split_lambda:     0.0881 us
+ecmult_multi_43p_g            ,     4.95      ,     5.02      ,     5.11   
+Time for average secp256k1_scalar_split_lambda:     0.0892 us
+ecmult_multi_47p_g            ,     4.93      ,     5.00      ,     5.06   
+Time for average secp256k1_scalar_split_lambda:     0.0896 us
+ecmult_multi_51p_g            ,     4.97      ,     5.02      ,     5.05   
+Time for average secp256k1_scalar_split_lambda:     0.0906 us
+ecmult_multi_55p_g            ,     4.90      ,     4.99      ,     5.08   
+Time for average secp256k1_scalar_split_lambda:     0.0911 us
+ecmult_multi_59p_g            ,     4.94      ,     5.02      ,     5.11   
+Time for average secp256k1_scalar_split_lambda:     0.0911 us
+ecmult_multi_63p_g            ,     4.92      ,     5.00      ,     5.07   
+Time for average secp256k1_scalar_split_lambda:     0.0894 us
+ecmult_multi_71p_g            ,     4.90      ,     5.00      ,     5.15   
+Time for average secp256k1_scalar_split_lambda:     0.0903 us
+ecmult_multi_79p_g            ,     4.93      ,     5.00      ,     5.06   
+Time for average secp256k1_scalar_split_lambda:     0.0912 us
+ecmult_multi_87p_g            ,     4.92      ,     5.03      ,     5.16   
+Time for average secp256k1_scalar_split_lambda:     0.0897 us
+ecmult_multi_95p_g            ,     4.50      ,     4.58      ,     4.64   
+Time for average secp256k1_scalar_split_lambda:     0.0    us
+ecmult_multi_103p_g           ,     4.42      ,     4.50      ,     4.56   
+Time for average secp256k1_scalar_split_lambda:     0.0    us
+ecmult_multi_111p_g           ,     4.33      ,     4.41      ,     4.47   
+Time for average secp256k1_scalar_split_lambda:     0.0    us
+ecmult_multi_119p_g           ,     4.29      ,     4.37      ,     4.42   
+Time for average secp256k1_scalar_split_lambda:     0.0    us
+ecmult_multi_127p_g           ,     4.27      ,     4.33      ,     4.37   
+Time for average secp256k1_scalar_split_lambda:     0.0    us
+ecmult_multi_143p_g           ,     4.17      ,     4.23      ,     4.30   
+Time for average secp256k1_scalar_split_lambda:     0.0    us
+ecmult_multi_159p_g           ,     4.05      ,     4.12      ,     4.18   
+Time for average secp256k1_scalar_split_lambda:     0.0    us
+ecmult_multi_175p_g           ,     3.97      ,     4.01      ,     4.08   
+Time for average secp256k1_scalar_split_lambda:     0.0    us
+ecmult_multi_191p_g           ,     3.90      ,     3.93      ,     4.00   
+Time for average secp256k1_scalar_split_lambda:     0.0    us
+ecmult_multi_207p_g           ,     3.80      ,     3.90      ,     3.95   
+Time for average secp256k1_scalar_split_lambda:     0.0    us
+ecmult_multi_223p_g           ,     3.75      ,     3.83      ,     3.93   
+Time for average secp256k1_scalar_split_lambda:     0.0    us
+ecmult_multi_239p_g           ,     3.80      ,     3.86      ,     3.94   
+Time for average secp256k1_scalar_split_lambda:     0.0    us
+ecmult_multi_255p_g           ,     3.74      ,     3.80      ,     3.86   
+Time for average secp256k1_scalar_split_lambda:     0.0    us
+ecmult_multi_287p_g           ,     3.65      ,     3.67      ,     3.70   
+Time for average secp256k1_scalar_split_lambda:     0.0    us
+ecmult_multi_319p_g           ,     3.55      ,     3.59      ,     3.63   
+Time for average secp256k1_scalar_split_lambda:     0.0    us
+ecmult_multi_351p_g           ,     3.46      ,     3.51      ,     3.57   
+Time for average secp256k1_scalar_split_lambda:     0.0    us
+ecmult_multi_383p_g           ,     3.42      ,     3.45      ,     3.50   
+Time for average secp256k1_scalar_split_lambda:     0.0    us
+ecmult_multi_415p_g           ,     3.35      ,     3.39      ,     3.46   
+Time for average secp256k1_scalar_split_lambda:     0.0    us
+ecmult_multi_447p_g           ,     3.29      ,     3.33      ,     3.39   
+Time for average secp256k1_scalar_split_lambda:     0.0    us
+ecmult_multi_479p_g           ,     3.27      ,     3.32      ,     3.36   
+Time for average secp256k1_scalar_split_lambda:     0.0    us
+ecmult_multi_511p_g           ,     3.23      ,     3.31      ,     3.34   
+Time for average secp256k1_scalar_split_lambda:     0.0    us
+ecmult_multi_575p_g           ,     3.17      ,     3.23      ,     3.28   
+Time for average secp256k1_scalar_split_lambda:     0.0    us
+ecmult_multi_639p_g           ,     3.12      ,     3.18      ,     3.22   
+Time for average secp256k1_scalar_split_lambda:     0.0    us
+ecmult_multi_703p_g           ,     3.11      ,     3.13      ,     3.18   
+Time for average secp256k1_scalar_split_lambda:     0.0    us

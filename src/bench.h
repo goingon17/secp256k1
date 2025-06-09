@@ -18,6 +18,7 @@
 #  include <sys/time.h>
 #endif
 
+
 static int64_t gettime_i64(void) {
 #if (defined(_MSC_VER) && _MSC_VER >= 1900)
     /* C11 way to get wallclock time */
@@ -36,6 +37,8 @@ static int64_t gettime_i64(void) {
 
 #define FP_EXP (6)
 #define FP_MULT (1000000LL)
+int64_t s_time = 0; 
+
 
 /* Format fixed point number. */
 static void print_number(const int64_t x) {
@@ -100,6 +103,7 @@ static void run_benchmark(char *name, void (*benchmark)(void*, int), void (*setu
     int64_t min = INT64_MAX;
     int64_t sum = 0;
     int64_t max = 0;
+
     for (i = 0; i < count; i++) {
         int64_t begin, total;
         if (setup != NULL) {
@@ -127,9 +131,13 @@ static void run_benchmark(char *name, void (*benchmark)(void*, int), void (*setu
     printf("   , ");
     print_number(max * FP_MULT / iter);
     printf("\n");
+    printf("Time for average secp256k1_scalar_split_lambda: ");
+    print_number(((s_time * FP_MULT) / count) / iter);
+    printf("us\n");
+    s_time = 0;
 }
 
-static int have_flag(int argc, char** argv, char *flag) {
+static int have_flag(int argc, char** argv, char*flag) {
     char** argm = argv + argc;
     argv++;
     while (argv != argm) {

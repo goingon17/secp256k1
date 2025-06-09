@@ -1,25 +1,17 @@
-/******************************************************************************
- * Copyright (c) 2013, 2014, 2017 Pieter Wuille, Andrew Poelstra, Jonas Nick  *
- * Distributed under the MIT software license, see the accompanying           *
- * file COPYING or https://www.opensource.org/licenses/mit-license.php.       *
- ******************************************************************************/
-
 #ifndef SECP256K1_ECMULT_IMPL_H
 #define SECP256K1_ECMULT_IMPL_H
 
 #include <string.h>
 #include <stdint.h>
 
+
 #include "util.h"
 #include "group.h"
 #include "scalar.h"
 #include "ecmult.h"
 #include "precomputed_ecmult.h"
-
+#include "bench.h"
 #if defined(EXHAUSTIVE_TEST_ORDER)
-/* We need to lower these values for exhaustive tests because
- * the tables cannot have infinities in them (this breaks the
- * affine-isomorphism stuff which tracks z-ratios) */
 #  if EXHAUSTIVE_TEST_ORDER > 128
 #    define WINDOW_A 5
 #  elif EXHAUSTIVE_TEST_ORDER > 8
@@ -28,17 +20,7 @@
 #    define WINDOW_A 2
 #  endif
 #else
-/* optimal for 128-bit and 256-bit exponents. */
 #  define WINDOW_A 5
-/** Larger values for ECMULT_WINDOW_SIZE result in possibly better
- *  performance at the cost of an exponentially larger precomputed
- *  table. The exact table size is
- *      (1 << (WINDOW_G - 2)) * sizeof(secp256k1_ge_storage)  bytes,
- *  where sizeof(secp256k1_ge_storage) is typically 64 bytes but can
- *  be larger due to platform-specific padding and alignment.
- *  Two tables of this size are used (due to the endomorphism
- *  optimization).
- */
 #endif
 
 #define WNAF_BITS 128
@@ -56,20 +38,8 @@
 
 #define ECMULT_MAX_POINTS_PER_BATCH 5000000
 
-/** Fill a table 'pre_a' with precomputed odd multiples of a.
- *  pre_a will contain [1*a,3*a,...,(2*n-1)*a], so it needs space for n group elements.
- *  zr needs space for n field elements.
- *
- *  Although pre_a is an array of _ge rather than _gej, it actually represents elements
- *  in Jacobian coordinates with their z coordinates omitted. The omitted z-coordinates
- *  can be recovered using z and zr. Using the notation z(b) to represent the omitted
- *  z coordinate of b:
- *  - z(pre_a[n-1]) = 'z'
- *  - z(pre_a[i-1]) = z(pre_a[i]) / zr[i] for n > i > 0
- *
- *  Lastly the zr[0] value, which isn't used above, is set so that:
- *  - a.z = z(pre_a[0]) / zr[0]
- */
+extern int64_t s_time;
+
 static void secp256k1_ecmult_odd_multiples_table(int n, secp256k1_ge *pre_a, secp256k1_fe *zr, secp256k1_fe *z, const secp256k1_gej *a) {
     secp256k1_gej d, ai;
     secp256k1_ge d_ge;
@@ -78,28 +48,11 @@ static void secp256k1_ecmult_odd_multiples_table(int n, secp256k1_ge *pre_a, sec
     VERIFY_CHECK(!a->infinity);
 
     secp256k1_gej_double_var(&d, a, NULL);
-
-    /*
-     * Perform the additions using an isomorphic curve Y^2 = X^3 + 7*C^6 where C := d.z.
-     * The isomorphism, phi, maps a secp256k1 point (x, y) to the point (x*C^2, y*C^3) on the other curve.
-     * In Jacobian coordinates phi maps (x, y, z) to (x*C^2, y*C^3, z) or, equivalently to (x, y, z/C).
-     *
-     *     phi(x, y, z) = (x*C^2, y*C^3, z) = (x, y, z/C)
-     *   d_ge := phi(d) = (d.x, d.y, 1)
-     *     ai := phi(a) = (a.x*C^2, a.y*C^3, a.z)
-     *
-     * The group addition functions work correctly on these isomorphic curves.
-     * In particular phi(d) is easy to represent in affine coordinates under this isomorphism.
-     * This lets us use the faster secp256k1_gej_add_ge_var group addition function that we wouldn't be able to use otherwise.
-     */
     secp256k1_ge_set_xy(&d_ge, &d.x, &d.y);
     secp256k1_ge_set_gej_zinv(&pre_a[0], a, &d.z);
     secp256k1_gej_set_ge(&ai, &pre_a[0]);
     ai.z = a->z;
 
-    /* pre_a[0] is the point (a.x*C^2, a.y*C^3, a.z*C) which is equivalent to a.
-     * Set zr[0] to C, which is the ratio between the omitted z(pre_a[0]) value and a.z.
-     */
     zr[0] = d.z;
 
     for (i = 1; i < n; i++) {
@@ -107,10 +60,6 @@ static void secp256k1_ecmult_odd_multiples_table(int n, secp256k1_ge *pre_a, sec
         secp256k1_ge_set_xy(&pre_a[i], &ai.x, &ai.y);
     }
 
-    /* Multiply the last z-coordinate by C to undo the isomorphism.
-     * Since the z-coordinates of the pre_a values are implied by the zr array of z-coordinate ratios,
-     * undoing the isomorphism here undoes the isomorphism for all pre_a values.
-     */
     secp256k1_fe_mul(z, &ai.z, &d.z);
 }
 
@@ -152,13 +101,6 @@ SECP256K1_INLINE static void secp256k1_ecmult_table_get_ge_storage(secp256k1_ge 
     }
 }
 
-/** Convert a number to WNAF notation. The number becomes represented by sum(2^i * wnaf[i], i=0..bits),
- *  with the following guarantees:
- *  - each wnaf[i] is either 0, or an odd integer between -(1<<(w-1) - 1) and (1<<(w-1) - 1)
- *  - two non-zero entries in wnaf are separated by at least w-1 zeroes.
- *  - the number of set values in wnaf is returned. This number is at most 256, and at most one more
- *    than the number of bits in the (absolute value) of the input.
- */
 static int secp256k1_ecmult_wnaf(int *wnaf, int len, const secp256k1_scalar *a, int w) {
     secp256k1_scalar s;
     int last_set_bit = -1;
@@ -256,9 +198,17 @@ static void secp256k1_ecmult_strauss_wnaf(const struct secp256k1_strauss_state *
             continue;
         }
         /* split na into na_1 and na_lam (where na = na_1 + na_lam*lambda, and na_1 and na_lam are ~128 bit) */
-        secp256k1_scalar_split_lambda(&na_1, &na_lam, &na[np]);
 
-        /* build wnaf representation for na_1 and na_lam. */
+
+            int64_t start_time = gettime_i64();
+            secp256k1_scalar_split_lambda(&na_1, &na_lam, &na[np]);
+            int64_t end_time = gettime_i64();
+            int64_t elapsed_time = end_time - start_time;
+            s_time += elapsed_time;
+
+
+
+
         state->ps[no].bits_na_1   = secp256k1_ecmult_wnaf(state->ps[no].wnaf_na_1,   129, &na_1,   WINDOW_A);
         state->ps[no].bits_na_lam = secp256k1_ecmult_wnaf(state->ps[no].wnaf_na_lam, 129, &na_lam, WINDOW_A);
         VERIFY_CHECK(state->ps[no].bits_na_1 <= 129);
@@ -270,16 +220,6 @@ static void secp256k1_ecmult_strauss_wnaf(const struct secp256k1_strauss_state *
             bits = state->ps[no].bits_na_lam;
         }
 
-        /* Calculate odd multiples of a.
-         * All multiples are brought to the same Z 'denominator', which is stored
-         * in Z. Due to secp256k1' isomorphism we can do all operations pretending
-         * that the Z coordinate was 1, use affine addition formulae, and correct
-         * the Z coordinate of the result once at the end.
-         * The exception is the precomputed G table points, which are actually
-         * affine. Compared to the base used for other points, they have a Z ratio
-         * of 1/Z, so we can use secp256k1_gej_add_zinv_var, which uses the same
-         * isomorphism to efficiently add with a known Z inverse.
-         */
         tmp = a[np];
         if (no) {
             secp256k1_gej_rescale(&tmp, &Z);
